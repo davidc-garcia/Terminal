@@ -538,12 +538,22 @@ function App() {
     term.onData((data) => {
       const code = data.charCodeAt(0);
       
+      // Ctrl+I to toggle AI mode
+      if (code === 9) { // Tab (Ctrl+I)
+        toggleTerminalMode();
+        return;
+      }
+      
       if (code === 13) { // Enter
         term.writeln('');
         if (currentLine.trim()) {
-          executeCommand(currentLine.trim(), newSocket, term);
+          if (terminalMode === 'ai') {
+            handleAICommand(currentLine.trim(), newSocket, term);
+          } else {
+            executeCommand(currentLine.trim(), newSocket, term);
+          }
         } else {
-          term.write('\x1b[1;32m❯ \x1b[0m');
+          writePrompt(term);
         }
         currentLine = '';
       } else if (code === 127) { // Backspace
