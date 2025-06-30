@@ -687,6 +687,16 @@ function App() {
                 <Terminal className="w-5 h-5 text-cyan-400" />
                 <span>Terminal Interactiva</span>
               </h1>
+              <div className={`px-3 py-1 rounded-full text-xs font-bold ${
+                terminalMode === 'terminal' 
+                  ? 'bg-green-500/20 text-green-400 border border-green-500/30' 
+                  : 'bg-purple-500/20 text-purple-400 border border-purple-500/30'
+              }`}>
+                {terminalMode === 'terminal' ? '💻 TERMINAL' : '🤖 AI ASSISTANT'}
+              </div>
+              <div className="text-xs text-gray-400 bg-gray-700 px-2 py-1 rounded">
+                Ctrl+I para cambiar modo
+              </div>
               <div className="flex items-center space-x-2">
                 <Search className="w-4 h-4 text-gray-400" />
                 <input
