@@ -493,6 +493,31 @@ function App() {
   const fitAddonRef = useRef(null);
 
   useEffect(() => {
+    // Global keyboard handler for Ctrl+I
+    const handleGlobalKeyDown = (e) => {
+      if (e.ctrlKey && e.key === 'i') {
+        e.preventDefault();
+        const newMode = terminalMode === 'terminal' ? 'ai' : 'terminal';
+        setTerminalMode(newMode);
+        
+        if (terminal) {
+          terminal.writeln('');
+          terminal.writeln(`\x1b[1;35m🔄 Switched to ${newMode.toUpperCase()} mode\x1b[0m`);
+          const promptColor = newMode === 'ai' ? '\x1b[1;35m' : '\x1b[1;32m';
+          const promptSymbol = newMode === 'ai' ? '🤖' : '❯';
+          terminal.write(`${promptColor}${promptSymbol} \x1b[0m`);
+        }
+      }
+    };
+
+    document.addEventListener('keydown', handleGlobalKeyDown);
+    
+    return () => {
+      document.removeEventListener('keydown', handleGlobalKeyDown);
+    };
+  }, [terminalMode, terminal]);
+
+  useEffect(() => {
     // Initialize Socket.IO connection
     const newSocket = io(BACKEND_URL);
     setSocket(newSocket);
