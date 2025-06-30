@@ -619,12 +619,23 @@ function App() {
       if (result.working_directory) {
         setCurrentPath(result.working_directory);
       }
-      term.write('\x1b[1;32m❯ \x1b[0m');
+      const promptColor = terminalMode === 'ai' ? '\x1b[1;35m' : '\x1b[1;32m';
+      const promptSymbol = terminalMode === 'ai' ? '🤖' : '❯';
+      term.write(`${promptColor}${promptSymbol} \x1b[0m`);
     });
 
     newSocket.on('command_error', (data) => {
       term.writeln(`\x1b[1;31mError: ${data.error}\x1b[0m`);
-      term.write('\x1b[1;32m❯ \x1b[0m');
+      const promptColor = terminalMode === 'ai' ? '\x1b[1;35m' : '\x1b[1;32m';
+      const promptSymbol = terminalMode === 'ai' ? '🤖' : '❯';
+      term.write(`${promptColor}${promptSymbol} \x1b[0m`);
+    });
+
+    newSocket.on('ai_response', (data) => {
+      term.writeln(`\x1b[1;36m🤖 AI: ${data.analysis}\x1b[0m`);
+      const promptColor = terminalMode === 'ai' ? '\x1b[1;35m' : '\x1b[1;32m';
+      const promptSymbol = terminalMode === 'ai' ? '🤖' : '❯';
+      term.write(`${promptColor}${promptSymbol} \x1b[0m`);
     });
 
     // Handle window resize
