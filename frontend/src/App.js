@@ -487,6 +487,8 @@ function App() {
   const [apiProvider, setApiProvider] = useState(localStorage.getItem('aiProvider') || 'openai');
   const [systemInfo, setSystemInfo] = useState(null);
   const [currentPath, setCurrentPath] = useState('');
+  const [terminalMode, setTerminalMode] = useState('terminal'); // 'terminal' or 'ai'
+  const [aiInput, setAiInput] = useState('');
   const terminalRef = useRef(null);
   const fitAddonRef = useRef(null);
 
