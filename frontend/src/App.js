@@ -533,6 +533,36 @@ function App() {
       term.write('\x1b[1;32m❯ \x1b[0m');
     }
 
+    // Function to toggle between terminal and AI modes
+    const toggleTerminalMode = () => {
+      const newMode = terminalMode === 'terminal' ? 'ai' : 'terminal';
+      setTerminalMode(newMode);
+      term.writeln('');
+      term.writeln(`\x1b[1;35mSwitched to ${newMode.toUpperCase()} mode\x1b[0m`);
+      writePrompt(term);
+    };
+
+    // Function to write the appropriate prompt
+    const writePrompt = (term) => {
+      const promptColor = terminalMode === 'ai' ? '\x1b[1;35m' : '\x1b[1;32m';
+      const promptSymbol = terminalMode === 'ai' ? '🤖' : '❯';
+      term.write(`${promptColor}${promptSymbol} \x1b[0m`);
+    };
+
+    // Function to handle AI commands
+    const handleAICommand = (command, socket, term) => {
+      if (socket && apiKey) {
+        socket.emit('ai_analyze', {
+          message: command,
+          api_key: apiKey,
+          provider: apiProvider
+        });
+      } else {
+        term.writeln('\x1b[1;31mError: AI mode requires an API key. Please configure it in settings.\x1b[0m');
+        writePrompt(term);
+      }
+    };
+
     // Handle command input
     let currentLine = '';
     term.onData((data) => {
